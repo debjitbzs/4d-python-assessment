@@ -34,12 +34,20 @@ def read_parquet(filepath):
     sys_logger.info(f"Reading parquet file from {filepath}")
     return pd.read_parquet(filepath)
 
+##utility adde for product pipeline to read json
+def read_json(file_path, **kwargs):
+    import pandas as pd
+    return pd.read_json(file_path, **kwargs)
+
+## added json case for product pipeline ####
 def get_read_func(type):
     match type:
         case "csv":
             return read_csv
         case "excel":
             return read_excel
+        case "json":
+            return read_json
         case "parquet":
             return read_parquet
         case _:
