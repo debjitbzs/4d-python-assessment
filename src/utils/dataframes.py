@@ -6,7 +6,7 @@ import pandas as pd
 from uuid import uuid4
 
 
-def apply_scd2(old_df, new_df, key_cols, date, is_full=False):
+def apply_scd2(old_df, new_df, key_cols, date, is_full=False,source_name=None):
     """
     Apply Slowly Changing Dimension Type 2 logic to a dataframe
 
@@ -58,9 +58,11 @@ def apply_scd2(old_df, new_df, key_cols, date, is_full=False):
     )
     old_file["index"] = old_file.index
     new_file["index"] = new_file.index
-    ## adding typecasting to get rif merge error  ###
-    old_file['sale_id'] = old_file['sale_id'].astype(str)
-    new_file['sale_id'] = new_file['sale_id'].astype(str)
+    ## adding typecasting to get rid merge error  ### specific to sales pipe due to schema mismatch b/w int64 and string obj
+    if source_name == "sales":
+    # Apply sale-specific logic
+        old_file['sale_id'] = old_file['sale_id'].astype(str)
+        new_file['sale_id'] = new_file['sale_id'].astype(str)
 
 
     if is_full:
@@ -146,13 +148,14 @@ def process_data(source_name, dataframe, config, date):
     if len(error_records) > 0:
         sys_logger.warning(f"Found {len(error_records)} error records for {source_name}")
         #TODO: save error records to a file
-
+    ##adding source name as argument of apply_scd2
     new_table = apply_scd2(
         current_table,
         clean_records,
         key_cols,
         date,
         is_full,
+        source_name
     )
 
     save_file(get_save_filename(source_name), new_table)
