@@ -58,6 +58,10 @@ def apply_scd2(old_df, new_df, key_cols, date, is_full=False):
     )
     old_file["index"] = old_file.index
     new_file["index"] = new_file.index
+    ## adding typecasting to get rif merge error  ###
+    old_file['sale_id'] = old_file['sale_id'].astype(str)
+    new_file['sale_id'] = new_file['sale_id'].astype(str)
+
 
     if is_full:
         # slightly faster approach for full file loads

@@ -1,4 +1,3 @@
-
 CUSTOMER_SCHEMA = [
     {
         "name": "customer_id",
@@ -78,7 +77,7 @@ CUSTOMER_SCHEMA = [
 SALES_SCHEMA = [
     {
         'name': 'sale_id',
-        'type': 'int',
+        'type': 'string',
         'required': True
     },
     {
